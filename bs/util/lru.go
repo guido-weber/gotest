@@ -13,13 +13,13 @@ type LruCache struct {
 }
 
 // NewLruCache returns a new LruCache with maximum capacity max
-func NewLruCache(max int) LruCache {
-	return LruCache{max: max, l: list.New(), m: make(map[string]*list.Element, max)}
+func NewLruCache(max int) *LruCache {
+	return &LruCache{max: max, l: list.New(), m: make(map[string]*list.Element, max)}
 }
 
 // Get returns the value for key, true or nil, false if not found. If found,
 // marks the key as least recently used.
-func Get(c *LruCache, key string) (string, bool) {
+func (c *LruCache) Get(key string) (string, bool) {
 	if elem, ok := c.m[key]; ok {
 		c.l.MoveToFront(elem)
 		return elem.Value.(string), true
@@ -28,7 +28,7 @@ func Get(c *LruCache, key string) (string, bool) {
 }
 
 // Put inserts a value, possibly dropping another element
-func Put(c *LruCache, key, value string) {
+func (c *LruCache) Put(key, value string) {
 	if elem, ok := c.m[key]; ok {
 		elem.Value = value
 		c.l.MoveToFront(elem)
